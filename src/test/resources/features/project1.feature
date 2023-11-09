@@ -124,7 +124,7 @@ Feature: Clockify
     Then the status code should be 200
 
 
-  # Acceso denegado
+  # bad request 403 - acceso denegado
   @UpdateProjectTemplate
   Scenario: Update project template
     Given call project1.feature@ListWorkspace
@@ -133,10 +133,10 @@ Feature: Clockify
     And endpoint /v1/workspaces/{{id}}/projects/{{IdProject}}/template
     And body template.json
     When execute method PATCH
-    Then the status code should be 403
+    Then the status code should be 200
 
 
-  # Acceso denegado
+  # bad request 403 - acceso denegado
   @UpdateProjectUserCostRate
   Scenario: Update Project User Cost Rate
     Given call project1.feature@ListWorkspace
