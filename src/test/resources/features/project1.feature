@@ -37,7 +37,7 @@ Feature: Clockify
     When execute method GET
     Then the status code should be 200
     * define IdProject = $.[1].id
-   * define UserIdp = $.[1].userId
+    * define UserIdp = $.[1].memberships.[0].userId
 
    @projectById
   Scenario: Find project by ID
@@ -131,20 +131,19 @@ Feature: Clockify
 
   @UpdateProjectUserCostRate
 
-#no funca UserID
+#ok
   @UpdateProjectUserBillableRate
   Scenario: Update Project User Billable Rate
     Given call project1.feature@ListWorkspace
     And call project1.feature@listProject
     And base url https://api.clockify.me/api
     And endpoint /v1/workspaces/{{id}}/projects/{{IdProject}}/users/{{UserIdp}}/hourly-rate
-    And body billableRate.json
+    And body billable_rate.json
     When execute method PUT
     Then the status code should be 200
-    And response should be amount = 1
+    And response should be $.memberships.[0].hourlyRate.amount = 2
 
-
-
+    
 #ok
   @UpdateProjectEstimateNotAuthorized
   Scenario: Update project estimate
