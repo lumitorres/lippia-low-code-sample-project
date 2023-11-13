@@ -1,3 +1,4 @@
+@All
 Feature: Clockify TP Final
 
   Background:
@@ -32,7 +33,6 @@ Feature: Clockify TP Final
     And endpoint /v1/workspaces/{{workspaceId}}/user/{{userId}}/time-entries
     When execute method GET
     Then the status code should be 200
-    * define timeEntryId = $.[0].id
 
   @AddProjectHours
   Scenario: Add time entry to a project
@@ -42,12 +42,22 @@ Feature: Clockify TP Final
     And body add_time_entry.json
     When execute method POST
     Then the status code should be 201
-#
-#  @projectById
-#  Scenario: Find project by ID
-#    Given call project1.feature@listWorkspace
-#    And call project1.feature@listProject
-#    And base url https://api.clockify.me/api
-#    And endpoint /v1/workspaces/{{id}}/projects/{{IdProject}}
-#    When execute method GET
-#    Then the status code should be 200
+    * define timeEntryId = $.id
+
+  @UpdateTimeEntry
+  Scenario: Update time entry on workspace
+    Given call ClockyTpFinal.feature@ListWorkspace
+    And call ClockyTpFinal.feature@AddProjectHours
+    And base url https://api.clockify.me/api
+    And endpoint /v1/workspaces/{{workspaceId}}/time-entries/{{timeEntryId}}
+    And body update_time_entry.json
+    When execute method PUT
+    Then the status code should be 200
+    # Remove added time entry after update is done
+    Then call ClockyTpFinal.feature@DeleteTimeEntry
+
+    @DeleteTimeEntry
+    Scenario: Delete time entry from workspace
+      And base url https://api.clockify.me/api
+      And endpoint /v1/workspaces/{{workspaceId}}/time-entries/{{timeEntryId}}
+      When execute method DELETE
