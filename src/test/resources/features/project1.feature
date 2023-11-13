@@ -5,7 +5,7 @@ Feature: Clockify
     And header Accept = */*
     And header x-api-key = MjY5NWRlOTktYzBkZS00YWViLWJjZGItNjNiMjU2YTM2OTU1
 
-  @ListWorkspace
+  #@ListWorkspace
   Scenario: Get all my workspaces
     Given base url https://api.clockify.me/api
     And endpoint /v1/workspaces
@@ -29,7 +29,7 @@ Feature: Clockify
       | "Project_3" |
 
 
-  @listProject
+  #@listProject
   Scenario: Get all projects on workspace
     Given call project1.feature@ListWorkspace
     And base url https://api.clockify.me/api
