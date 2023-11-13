@@ -54,10 +54,14 @@ Feature: Clockify TP Final
     When execute method PUT
     Then the status code should be 200
     # Remove added time entry after update is done
-    Then call ClockyTpFinal.feature@DeleteTimeEntry
+    #Then call ClockyTpFinal.feature@DeleteTimeEntry
 
     @DeleteTimeEntry
     Scenario: Delete time entry from workspace
+      Given call ClockyTpFinal.feature@ListWorkspace
+      And call ClockyTpFinal.feature@AddProjectHours
       And base url https://api.clockify.me/api
       And endpoint /v1/workspaces/{{workspaceId}}/time-entries/{{timeEntryId}}
       When execute method DELETE
+      Then the status code should be 204
+
