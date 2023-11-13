@@ -12,25 +12,36 @@ Feature: Clockify TP Final
     And endpoint /v1/workspaces
     When execute method GET
     Then the status code should be 200
-    * define idWorkspace = $.[1].id
+    * define workspaceId = $.[1].id
 
   @ListProject
   Scenario: Get all projects on workspace
     Given call ClockyTpFinal.feature@ListWorkspace
     And base url https://api.clockify.me/api
-    And endpoint /v1/workspaces/{{idWorkspace}}/projects
+    And endpoint /v1/workspaces/{{workspaceId}}/projects
     When execute method GET
     Then the status code should be 200
-    * define IdProject = $.[0].id
-    * define UserId = $.[0].memberships.[0].userId
-#
-#  Scenario: Get time entries for a user on workspace
-#    Given call ClockyTpFinal.feature@ListWorkspace
-#    And call ClockyTpFinal.feature@listProject
-#    And base url https://api.clockify.me/api
-#    And endpoint /v1/workspaces/{{idWorkspace}}/user/{{UserId}}/time-entries
-#    When execute method GET
-#    Then the status code should be 200
+    * define projectId = $.[0].id
+    * define userId = $.[0].memberships.[0].userId
+
+  @ListTimeEntries
+  Scenario: Get time entries for a user on workspace
+    Given call ClockyTpFinal.feature@ListWorkspace
+    And call ClockyTpFinal.feature@ListProject
+    And base url https://api.clockify.me/api
+    And endpoint /v1/workspaces/{{workspaceId}}/user/{{userId}}/time-entries
+    When execute method GET
+    Then the status code should be 200
+    * define timeEntryId = $.[0].id
+
+  @AddProjectHours
+  Scenario: Add time entry to a project
+    Given call ClockyTpFinal.feature@ListWorkspace
+    And base url https://api.clockify.me/api
+    And endpoint /v1/workspaces/{{workspaceId}}/time-entries
+    And body add_time_entry.json
+    When execute method POST
+    Then the status code should be 201
 #
 #  @projectById
 #  Scenario: Find project by ID
